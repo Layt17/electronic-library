@@ -8,20 +8,6 @@ export const AppConfig = {
     expires_in_refresh: env.JWT_EXPIRES_IN_REFRESH || '48h',
   },
 
-  typeOrmConfig: {
-    host: process.env.DB_HOST || 'db',
-    port: +process.env.DB_PORT || 3306,
-    username: process.env.DB_USERNAME || 'root',
-    password: process.env.DB_PASSWORD || 'secret',
-    database: process.env.DB_NAME || 'blah',
-    entities: ['dist/**/*.entity{.ts,.js}'],
-    migrations: ['dist/src/internal/migrations/*{.ts,.js}'],
-    migrationsDir: 'migration',
-    migrationsTableName: 'migrations',
-    migrationsRun: false,
-    synchronize: false,
-  },
-
   typeOrmConfigSeeding: {
     host: process.env.DB_HOST || 'db',
     port: +process.env.DB_PORT || 3306,
