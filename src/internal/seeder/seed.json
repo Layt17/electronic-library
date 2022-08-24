@@ -1,0 +1,8 @@
+{
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "rootDir": ".",
+    "testRegex": "seed.run.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    }
+}
