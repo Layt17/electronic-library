@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from '../../entity/role.entity';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -36,6 +37,8 @@ export class ShowUserDto {
   @ApiProperty()
   birth: string;
 
-  @ApiProperty()
-  passport: string;
+  @ApiProperty({
+    type: [Role],
+  })
+  roles: Role[];
 }
