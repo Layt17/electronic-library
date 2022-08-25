@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   Entity,
@@ -10,29 +11,40 @@ import { Role } from './role.entity';
 @Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn()
+  @ApiProperty()
   id: number;
 
   @Column()
+  @ApiProperty()
   email: string;
 
   @Column()
+  @ApiProperty()
   first_name: string;
 
   @Column()
+  @ApiProperty()
   last_name: string;
 
   @Column()
+  @ApiProperty()
   birth: string;
 
   @Column({ select: false })
+  @ApiProperty()
   passport: string;
 
   @Column({ select: false })
+  @ApiProperty()
   password: string;
 
   @Column({ default: null, select: false })
+  @ApiProperty()
   refresh_token?: string;
 
+  @ApiProperty({
+    type: [Role],
+  })
   @ManyToMany(() => Role, (role) => role.id, {
     cascade: ['soft-remove'],
   })

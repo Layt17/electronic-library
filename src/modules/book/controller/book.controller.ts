@@ -15,7 +15,9 @@ import { Book } from '../entity/book.entity';
 import { BookingDto } from '../dto/booking.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/modules/auth/roles.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('book')
 @Controller('book')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
