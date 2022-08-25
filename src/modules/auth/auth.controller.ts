@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ShowUserDto } from '../user/dto/user/user.dto';
 import { AuthService } from './auth.service';
 import { LoginDto, RegistrationDto } from './dto/registration.dto';
@@ -10,6 +10,10 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('registration')
+  @ApiOkResponse({
+    type: RegistrationDto,
+    description: 'Registration',
+  })
   async registration(
     @Body() registrationDto: RegistrationDto,
   ): Promise<ShowUserDto> {
@@ -17,12 +21,20 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
+  @ApiOkResponse({
+    type: TokensDto,
+    description: 'Login',
+  })
+  async login(@Body() loginDto: LoginDto): Promise<TokensDto> {
     return await this.authService.login(loginDto);
   }
 
   @Post('refresh')
-  async updateTokens(@Body() tokensDto: TokensDto) {
+  @ApiOkResponse({
+    type: TokensDto,
+    description: 'Update tokens',
+  })
+  async updateTokens(@Body() tokensDto: TokensDto): Promise<TokensDto> {
     return await this.authService.updateTokens(tokensDto);
   }
 }
