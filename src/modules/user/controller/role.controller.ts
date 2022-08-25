@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -14,13 +13,18 @@ import { CreateRoleDto } from '../dto/role/create.role.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Role } from '../entity/role.entity';
 import { RoleService } from '../service/role.service';
-
+import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+@ApiTags('roles')
 @Controller('roles')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
+  @ApiOkResponse({
+    type: [Role],
+    description: 'Get all roles',
+  })
   async findAll(
     @Paginate() query: PaginateQuery,
   ): Promise<AltPaginated<Paginated<Role[]>>> {
@@ -29,12 +33,20 @@ export class RoleController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
+  @ApiOkResponse({
+    type: Role,
+    description: 'Get a role by id',
+  })
   async getOneById(@Param('id') id: number): Promise<AltPaginated<Role>> {
     return await this.roleService.findRoleById(id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
+  @ApiOkResponse({
+    type: Role,
+    description: 'Create a role',
+  })
   async createNew(
     @Body() createRoleDto: CreateRoleDto,
   ): Promise<AltPaginated<Role>> {
@@ -42,16 +54,10 @@ export class RoleController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Patch(':id')
-  async update(
-    @Param('id') id: number,
-    @Body() updateRoleDto: CreateRoleDto,
-  ): Promise<AltPaginated<Role>> {
-    return await this.roleService.updateRole(id, updateRoleDto);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
+  @ApiNotFoundResponse({
+    description: 'Delete role by id',
+  })
   async deleteById(@Param('id') id: number): Promise<AltPaginated<Role>> {
     return await this.roleService.deleteRoleById(id);
   }

@@ -1,6 +1,8 @@
 # compiled output
 /dist
 /node_modules
+packege-lock.json
+*.lock
 
 # Logs
 logs

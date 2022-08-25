@@ -28,6 +28,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/swagger": "^6.0.5",
     "@nestjs/typeorm": "8.0.3",
     "@types/passport-jwt": "^3.0.6",
     "mysql2": "^2.3.3",

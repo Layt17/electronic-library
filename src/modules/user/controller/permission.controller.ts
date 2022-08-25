@@ -3,7 +3,8 @@ import { PermissionService } from '../service/permission.service';
 import { AltPaginated } from 'src/internal/types/paginator';
 import { Permission } from '../entity/permissions.entity';
 import { AuthGuard } from '@nestjs/passport';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('permissions')
 @Controller('permissions')
 export class PermissionController {
   constructor(private permissionService: PermissionService) {}
