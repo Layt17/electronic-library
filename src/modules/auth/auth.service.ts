@@ -90,7 +90,7 @@ export class AuthService {
   }
 
   async validateUser(loginDto: LoginDto) {
-    const user = await this.userService.getOneDataByEmail(loginDto.email);
+    const user = await this.userService.findOneByEmail(loginDto.email);
 
     if (user && user.password === loginDto.password) {
       return user;

@@ -21,51 +21,31 @@ export class BookService {
   }
 
   async getOneByName(book_name: string): Promise<Book> {
-    const book = await this.bookRepository
-      .createQueryBuilder('books')
-      .where('books.name like :name', { name: `%${book_name}%` })
-      .getOne();
-    if (!book) {
-      throw new HttpException('not found', HttpStatus.NOT_FOUND);
-    }
+    const book = await this.bookRepository.findOne({ name: book_name });
+    if (!book) throw new HttpException('not found', HttpStatus.NOT_FOUND);
     return book;
   }
 
-  async getByAuthor(author: string): Promise<Book[]> {
-    const books = await this.bookRepository
-      .createQueryBuilder('books')
-      .where('books.author like :author', { author: `%${author}%` })
-      .getMany();
-    if (!books) {
-      throw new HttpException('not found', HttpStatus.NOT_FOUND);
-    }
+  async getAllByAuthor(author: string): Promise<Book[]> {
+    const books = await this.bookRepository.find({ author: author });
+    if (!books) throw new HttpException('not found', HttpStatus.NOT_FOUND);
     return books;
   }
 
-  async getByGenre(genre: string): Promise<Book[]> {
-    const books = await this.bookRepository
-      .createQueryBuilder('books')
-      .where('books.name like :genre', { genre: `%${genre}%` })
-      .getMany();
-    if (!books) {
-      throw new HttpException('not found', HttpStatus.NOT_FOUND);
-    }
+  async getAllByGenre(genre: string): Promise<Book[]> {
+    const books = await this.bookRepository.find({ genre: genre });
+    if (!books) throw new HttpException('not found', HttpStatus.NOT_FOUND);
     return books;
   }
 
   async giveBook(book_name: string, user_email: string) {
     const book = await this.getOneByName(book_name);
-    if (book.current_user) {
-      throw new HttpException(
-        'this book is already taken',
-        HttpStatus.CONFLICT,
-      );
-    }
     book.current_user = user_email;
     return await this.bookRepository.save(book);
   }
 
   async addBook(bookDto: BookDto) {
+    console.log(bookDto);
     return await this.bookRepository.save(bookDto);
   }
 

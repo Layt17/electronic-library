@@ -12,8 +12,8 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    const resp = this.userRepository.find();
-    return resp;
+    const res = this.userRepository.find();
+    return res;
   }
 
   async findOne(id: number): Promise<User> {
@@ -24,66 +24,47 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const resp = this.userRepository.save(createUserDto);
-    return resp;
+    const res = this.userRepository.save(createUserDto);
+    return res;
   }
 
   async remove(id: number) {
-    const resp = this.userRepository.delete(id);
-    return resp;
+    const res = this.userRepository.delete(id);
+    return res;
   }
 
-  async getOneDataByEmail(email: string): Promise<User> {
-    try {
-      const data = await this.userRepository
-        .createQueryBuilder('users')
-        .select([
-          'users.refresh_token',
-          'users.first_name',
-          'users.last_name',
-          'users.password',
-          'users.passport',
-          'users.email',
-          'users.id',
-        ])
-        .where(`email = '${email}'`)
-        .getOneOrFail();
+  async findOneByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({ email: email });
+    const res = { ...user };
 
-      return data;
+    // find by user id to protect against sql injection
+    try {
+      if (user) {
+        const secret_data = await this.userRepository
+          .createQueryBuilder('users')
+          .select(['users.password', 'users.passport'])
+          .where(`id = '${user.id}'`)
+          .getOneOrFail();
+        res.password = secret_data.password;
+        res.passport = secret_data.passport;
+        return res;
+      }
     } catch (e: any) {
       throw new NotFoundException(e.message);
     }
   }
 
-  async getByEmail(email: string) {
-    return this.userRepository.findOne({ email: email });
-  }
-
   async saveRefreshToken(user: User, refreshToken: string): Promise<void> {
-    const oldUser = await this.getOneDataByEmail(user.email);
+    const oldUser = await this.findOneByEmail(user.email);
     oldUser.refresh_token = refreshToken;
     this.userRepository.save(oldUser);
   }
 
   async getOneDataByRefresh(refresh: string): Promise<User> {
-    try {
-      const data = await this.userRepository
-        .createQueryBuilder('users')
-        .select([
-          'users.refresh_token',
-          'users.first_name',
-          'users.last_name',
-          'users.passport',
-          'users.password',
-          'users.email',
-          'users.id',
-        ])
-        .where(`refresh_token = '${refresh}'`)
-        .getOneOrFail();
-
-      return data;
-    } catch (e) {
-      throw new NotFoundException(e.message);
-    }
+    const data = await this.userRepository.findOneOrFail(
+      { refresh_token: refresh },
+      { relations: ['roles'] },
+    );
+    return data;
   }
 }
