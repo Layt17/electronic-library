@@ -40,7 +40,7 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Roles(['super-admin'])
+  @Roles(['admin'])
   @Get()
   @ApiOkResponse({
     type: [ShowUserDto],
@@ -51,7 +51,7 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Roles(['super-admin'])
+  @Roles(['admin'])
   @Delete(':id')
   @ApiNotFoundResponse({
     description: 'Delete user by id',
